@@ -1,0 +1,186 @@
+/*
+	Homeworlds CSS
+*/
+
+/* Site layout */
+
+html, body {
+	width: 100%;
+	height: 100%;
+
+	background-color: #333333;
+}
+
+#board-wrapper {
+	width: 100%;
+	height: 100%;
+	display: table;
+}
+
+#board {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+/* Floating controls panel */
+
+#controls-wrapper {
+	width: 100%;
+	position: fixed;
+	left: 0px;
+	bottom: 50px;
+	text-align: center;
+}
+
+#controls {
+	display: inline-block;
+	background-color: #fff;
+	border: 1px solid transparent;
+	border-color: #ddd;
+	border-radius: 6px;
+	padding: 10px;
+}
+
+/* Game surface */
+
+#game-wrapper {
+	width: 1600px;
+	height: 1100px;
+	padding: 50px;
+	margin: auto;
+
+	background-color: rgba(0,16,32,.2);
+	border-radius: 20px;
+}
+
+#game {
+	width: 1500px;
+	height: 1000px;
+	position: relative;
+
+	background-color: rgba(0,16,32,.2);
+	border-radius: 20px;
+}
+
+/* Systems + surrounding */
+
+.system-clear {
+	padding: 50px;
+	position: absolute;
+	border-radius: 100%;
+}
+
+.system {
+	width: 100px;
+	height: 100px;
+
+	border: 2px solid #ddd;
+	border-radius: 100%;
+	border-radius: 100%;
+
+	display: table;
+}
+
+.system-home {
+	box-shadow: 0 0 10px #ddd;
+}
+
+.stars, .ships-right, .ships-left {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.stars {
+	width: 20%;
+	text-align: center;
+}
+
+.ships-right {
+	width: 40%;
+	text-align: left;
+}
+
+.ships-left {
+	width: 40%;
+	text-align: right;
+}
+
+/* Game pieces */
+
+.red {
+	color: #ff0a60;
+}
+
+.green {
+	color: #a0ff06;
+}
+
+.blue {
+	color: #06a0ff;
+}
+
+.yellow {
+	color: #ffff06;
+}
+
+.size-1:after {
+	content: "1";
+	font-weight: bold;
+}
+
+.size-2:after {
+	content: "2";
+	font-weight: bold;
+}
+
+.size-3:after {
+	content: "3";
+	font-weight: bold;
+}
+
+/* Stash box */
+
+#stash-wrapper {
+	position: fixed;
+	top: 50%;
+	right: 50px;
+
+	background-color: #fff;
+	border: 1px solid transparent;
+	border-color: #ddd;
+	border-radius: 6px;
+}
+
+#stash {
+	text-align: right;
+	border-collapse: collapse;
+}
+
+#stash td {
+	border: 1px solid #ddd;
+	padding: 5px;
+}
+
+#stash td:first-child {
+	border-left: 0;
+	padding-left: 7px;
+}
+
+#stash td:last-child {
+	border-right: 0;
+	padding-right: 7px;
+}
+
+#stash tr:first-child td {
+	border-top: 0;
+	padding-top: 7px;
+}
+
+#stash tr:last-child td {
+	border-bottom: 0;
+	padding-bottom: 7px;
+}
+
+#stash td:hover {
+	background-color: rgba(0,0,0,.1);
+}

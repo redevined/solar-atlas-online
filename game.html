@@ -1,0 +1,287 @@
+<html>
+	<head>
+		<link href="./static/css/bootstrap.min.css" rel="stylesheet">
+		<link href="./static/css/homeworlds.css" rel="stylesheet">
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+		<script src="./static/js/bootstrap.min.js"></script>
+		<script src="./static/js/homeworlds.js"></script>
+
+		<script type="text/javascript">
+			var game;
+			
+			$(function() {
+				var current = JSON.parse(
+					"{" +
+					"    \"systems\": [" +
+					"        {" +
+					"            \"pos\": [750, 900]," +
+					"            \"home\": 1," +
+					"            \"stars\": [" +
+					"                {" +
+					"                    \"color\": \"red\"," +
+					"                    \"size\": 2" +
+					"                }," +
+					"                {" +
+					"                    \"color\": \"yellow\"," +
+					"                    \"size\": 1" +
+					"                }" +
+					"            ]," +
+					"            \"ships\": {" +
+					"                \"1\": [" +
+					"                    {" +
+					"                        \"color\": \"green\"," +
+					"                        \"size\": 3" +
+					"                    }" +
+					"                ]," +
+					"                \"2\": []" +
+					"            }" +
+					"        }," +
+					"        {" +
+					"            \"pos\": [750, 100]," +
+					"            \"home\": 2," +
+					"            \"stars\": [" +
+					"                {" +
+					"                    \"color\": \"blue\"," +
+					"                    \"size\": 1" +
+					"                }," +
+					"                {" +
+					"                    \"color\": \"green\"," +
+					"                    \"size\": 3" +
+					"                }" +
+					"            ]," +
+					"            \"ships\": {" +
+					"                \"1\": []," +
+					"                \"2\": [" +
+					"                    {" +
+					"                        \"color\": \"yellow\"," +
+					"                        \"size\": 3" +
+					"                    }" +
+					"                ]" +
+					"            }" +
+					"        }," +
+					"        {" +
+					"            \"pos\": [300, 300]," +
+					"            \"stars\": [" +
+					"                {" +
+					"                    \"color\": \"red\"," +
+					"                    \"size\": 3" +
+					"                }" +
+					"            ]," +
+					"            \"ships\": {" +
+					"                \"1\": [" +
+					"                    {" +
+					"                        \"color\": \"yellow\"," +
+					"                        \"size\": 1" +
+					"                    }," +
+					"                    {" +
+					"                        \"color\": \"yellow\"," +
+					"                        \"size\": 3" +
+					"                    }" +
+					"                ]," +
+					"                \"2\": []" +
+					"            }" +
+					"        }," +
+					"        {" +
+					"            \"pos\": [900, 500]," +
+					"            \"stars\": [" +
+					"                {" +
+					"                    \"color\": \"green\"," +
+					"                    \"size\": 2" +
+					"                }" +
+					"            ]," +
+					"            \"ships\": {" +
+					"                \"1\": [" +
+					"                    {" +
+					"                        \"color\": \"blue\"," +
+					"                        \"size\": 3" +
+					"                    }" +
+					"                ]," +
+					"                \"2\": [" +
+					"                    {" +
+					"                        \"color\": \"red\"," +
+					"                        \"size\": 2" +
+					"                    }" +
+					"                ]" +
+					"            }" +
+					"        }" +
+					"    ]," +
+					"    \"players\": [" +
+					"        {" +
+					"            \"id\": 1," +
+					"            \"name\": \"Alpha\"," +
+					"            \"actions\": 1" +
+					"        }," +
+					"        {" +
+					"            \"id\": 2," +
+					"            \"name\": \"Beta\"," +
+					"            \"actions\": 0" +
+					"        }" +
+					"    ]," +
+					"    \"stash\": {" +
+					"        \"red\": [" +
+					"            [" +
+					"                {" +
+					"                    \"color\": \"red\"," +
+					"                    \"size\": 1" +
+					"                }," +
+					"                {" +
+					"                    \"color\": \"red\"," +
+					"                    \"size\": 1" +
+					"                }," +
+					"                {" +
+					"                    \"color\": \"red\"," +
+					"                    \"size\": 1" +
+					"                }" +
+					"            ]," +
+					"            [" +
+					"                {" +
+					"                    \"color\": \"red\"," +
+					"                    \"size\": 2" +
+					"                }" +
+					"            ]," +
+					"            [" +
+					"                {" +
+					"                    \"color\": \"red\"," +
+					"                    \"size\": 3" +
+					"                }," +
+					"                {" +
+					"                    \"color\": \"red\"," +
+					"                    \"size\": 3" +
+					"                }" +
+					"            ]" +
+					"        ]," +
+					"        \"green\": [" +
+					"            [" +
+					"                {" +
+					"                    \"color\": \"green\"," +
+					"                    \"size\": 1" +
+					"                }," +
+					"                {" +
+					"                    \"color\": \"green\"," +
+					"                    \"size\": 1" +
+					"                }," +
+					"                {" +
+					"                    \"color\": \"green\"," +
+					"                    \"size\": 1" +
+					"                }" +
+					"            ]," +
+					"            [" +
+					"                {" +
+					"                    \"color\": \"green\"," +
+					"                    \"size\": 2" +
+					"                }," +
+					"                {" +
+					"                    \"color\": \"green\"," +
+					"                    \"size\": 2" +
+					"                }" +
+					"            ]," +
+					"            [" +
+					"                {" +
+					"                    \"color\": \"green\"," +
+					"                    \"size\": 3" +
+					"                }" +
+					"            ]" +
+					"        ]," +
+					"        \"blue\": [" +
+					"            [" +
+					"                {" +
+					"                    \"color\": \"blue\"," +
+					"                    \"size\": 1" +
+					"                }," +
+					"                {" +
+					"                    \"color\": \"blue\"," +
+					"                    \"size\": 1" +
+					"                }" +
+					"            ]," +
+					"            [" +
+					"                {" +
+					"                    \"color\": \"blue\"," +
+					"                    \"size\": 2" +
+					"                }," +
+					"                {" +
+					"                    \"color\": \"blue\"," +
+					"                    \"size\": 2" +
+					"                }," +
+					"                {" +
+					"                    \"color\": \"blue\"," +
+					"                    \"size\": 2" +
+					"                }" +
+					"            ]," +
+					"            [" +
+					"                {" +
+					"                    \"color\": \"blue\"," +
+					"                    \"size\": 3" +
+					"                }," +
+					"                {" +
+					"                    \"color\": \"blue\"," +
+					"                    \"size\": 3" +
+					"                }" +
+					"            ]" +
+					"        ]," +
+					"        \"yellow\": [" +
+					"            [" +
+					"                {" +
+					"                    \"color\": \"yellow\"," +
+					"                    \"size\": 1" +
+					"                }" +
+					"            ]," +
+					"            [" +
+					"                {" +
+					"                    \"color\": \"yellow\"," +
+					"                    \"size\": 2" +
+					"                }," +
+					"                {" +
+					"                    \"color\": \"yellow\"," +
+					"                    \"size\": 2" +
+					"                }," +
+					"                {" +
+					"                    \"color\": \"yellow\"," +
+					"                    \"size\": 2" +
+					"                }" +
+					"            ]," +
+					"            [" +
+					"                {" +
+					"                    \"color\": \"yellow\"," +
+					"                    \"size\": 3" +
+					"                }" +
+					"            ]" +
+					"        ]" +
+					"    }" +
+					"}"
+				);
+
+				game = new Game(current);
+				game.render( $("#game-wrapper") );
+
+				$("#next-turn").click(function() {
+					$.ajax({
+						type : "POST",
+						url : "/game",
+						data: game.toJson(),
+						contentType: "application/json;charset=UTF-8"
+					});
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div id="board-wrapper">
+			<div id="board">
+
+				<div id="game-wrapper">
+					<!-- Here comes the game! -->
+				</div>
+
+				<div id="controls-wrapper">
+					<div id="controls">
+						<button id="return" class="btn btn-danger">Return</button>
+						<button id="reset" class="btn btn-warning">Reset</button>
+						<button id="next-turn" class="btn btn-success">Finish</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</body>
+</html>
