@@ -10,7 +10,7 @@ class Actions
 		}
 
 
-class BaseActions extends Actions
+class InitActions extends Actions
 
 	constructor: (game) ->
 		super(game)

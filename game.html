@@ -1,11 +1,12 @@
 <html>
 	<head>
 		<link href="./static/css/bootstrap.min.css" rel="stylesheet">
-		<link href="./static/css/homeworlds.css" rel="stylesheet">
+		<link href="./static/css/game.css" rel="stylesheet">
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 		<script src="./static/js/bootstrap.min.js"></script>
-		<script src="./static/js/homeworlds.js"></script>
+		<script src="./static/js/game-core.js"></script>
+		<script src="./static/js/game-actions.js"></script>
 
 		<script type="text/javascript">
 			var game;
@@ -252,9 +253,18 @@
 				);
 
 				game = new Game(current);
-				game.render( $("#game-wrapper") );
+				game.render($( "#game-wrapper" ));
+				InitActions(game);
 
-				$("#next-turn").click(function() {
+				$( "button#return" ).click(function() {
+					location.href = "/";
+				})
+
+				$( "button#reset" ).click(function() {
+					location.reload(true);
+				});
+
+				$( "button#finish" ).click(function() {
 					$.ajax({
 						type : "POST",
 						url : "/game",
@@ -277,7 +287,7 @@
 					<div id="controls">
 						<button id="return" class="btn btn-danger">Return</button>
 						<button id="reset" class="btn btn-warning">Reset</button>
-						<button id="next-turn" class="btn btn-success">Finish</button>
+						<button id="finish" class="btn btn-success">Finish</button>
 					</div>
 				</div>
 
