@@ -7,9 +7,10 @@
 		<script src="./static/js/bootstrap.min.js"></script>
 		<script src="./static/js/game-core.js"></script>
 		<script src="./static/js/game-actions.js"></script>
+		<script src="./static/js/game-graphics.js"></script>
 
 		<script type="text/javascript">
-			var game;
+			var game, actions, graphics;
 			
 			$(function() {
 				var current = JSON.parse(
@@ -254,7 +255,8 @@
 
 				game = new Game(current);
 				game.render($( "#game-wrapper" ));
-				InitActions(game);
+				actions = new InitActions(game);
+				graphics = new InitGraphics(game);
 
 				$( "button#return" ).click(function() {
 					location.href = "/";

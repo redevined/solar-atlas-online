@@ -24,9 +24,11 @@ class Element
 
 	click: (key, handler) ->
 		@e.on("click.#{key}", handler)
+		if not @e.hasClass("selectable") then @e.addClass("selectable") else @overload = true
 
 	unclick: (key) ->
 		@e.off("click.#{key}")
+		if not @overload then @e.removeClass("selectable") else @overload = false
 
 	remove: () ->
 		@e.detach()
@@ -62,15 +64,19 @@ class Stash extends Element
 
 	clickRow: (color, key, handler) ->
 		@e.find("tr.stash-#{color}").on("click.#{key}", handler)
+		@e.find("tr.stash-#{color}").addClass("selectable")
 
 	clickCell: (color, size, key, handler) ->
 		@e.find("tr.stash-#{color} > td.stash-#{size}").on("click.#{key}", handler)
+		@e.find("tr.stash-#{color} > td.stash-#{size}").addClass("selectable")
 
 	unclickRows: (key) ->
 		@e.find("tr").off("click.#{key}")
+		@e.find("tr").removeClass("selectable")
 
 	unclickCells: (key) ->
 		@e.find("td").off("click.#{key}")
+		@e.find("td").removeClass("selectable")
 
 	add: (obj) ->
 		stashed = new Stashed(obj)
@@ -97,7 +103,6 @@ class Stashable extends Element
 			</span>
 		""")
 
-	# remove = remove from document, destroy = remove and return to stash
 	destroy: () ->
 		@remove()
 		game.stash.add(@)
@@ -144,12 +149,9 @@ class System extends Element
 		super("""
 			<div class="system-clear" style="top: #{@pos[1] - 100}px; left: #{@pos[0] - 100}px;">
 				<div class="system #{'system-home' if @home}">
-					<div class="ships-left">
-					</div>
-					<div class="stars">
-					</div>
-					<div class="ships-right">
-					</div>
+					<div class="ships-left"></div>
+					<div class="stars"></div>
+					<div class="ships-right"></div>
 				</div>
 			</div>
 		""")
@@ -162,9 +164,11 @@ class System extends Element
 
 	click: (key, handler) ->
 		@e.find(".system").on("click.#{key}", handler)
+		@e.find(".system").addClass("selectable")
 
 	unclick: (key) ->
 		@e.find(".system").off("click.#{key}")
+		@e.find(".system").removeClass("selectable")
 
 	addShip: (player, ship) ->
 		@ships[player.id].push(ship)

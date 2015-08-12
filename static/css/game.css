@@ -24,17 +24,24 @@ html, body {
 	width: 100%;
 	position: fixed;
 	left: 0px;
-	bottom: 50px;
+	bottom: 0px;
 	text-align: center;
 }
 
 #controls {
 	display: inline-block;
+	padding: 10px;
 	background-color: #fff;
 	border: 1px solid transparent;
 	border-color: #ddd;
 	border-radius: 6px;
-	padding: 10px;
+	box-shadow: inset 5px 5px 5px rgba(0,0,0,.1);
+}
+
+@media(min-height: 1150px) {
+	#controls-wrapper {
+		bottom: 50px;
+	}
 }
 
 /* Game surface */
@@ -58,15 +65,21 @@ html, body {
 	border-radius: 20px;
 }
 
+#game.selectable {
+	cursor: copy;
+}
+
 /* Systems + surrounding */
 
-.system-clear {
+div.system-clear {
 	padding: 50px;
 	position: absolute;
 	border-radius: 100%;
+
+	cursor: initial;
 }
 
-.system {
+div.system {
 	width: 100px;
 	height: 100px;
 
@@ -77,69 +90,81 @@ html, body {
 	display: table;
 }
 
-.system-home {
+div.system.system-home {
+	border: 6px double #ddd;
+}
+
+div.system.selectable {
+	background-color: rgba(255,255,255,.1);
+}
+
+div.system.selectable:hover {
 	box-shadow: 0 0 10px #ddd;
 }
 
-.stars, .ships-right, .ships-left {
+div.stars, div.ships-right, div.ships-left {
 	display: table-cell;
 	vertical-align: middle;
 }
 
-.stars {
+div.stars {
 	width: 20%;
 	text-align: center;
 }
 
-.ships-right {
+div.ships-right {
 	width: 40%;
 	text-align: left;
 }
 
-.ships-left {
+div.ships-left {
 	width: 40%;
 	text-align: right;
 }
 
 /* Game pieces */
 
-.red {
+span.star.selectable, span.ship.selectable {
+	background-color: rgba(255,255,255,.1);
+}
+
+span.red {
 	color: #ff0a60;
 }
 
-.green {
+span.green {
 	color: #a0ff06;
 }
 
-.blue {
+span.blue {
 	color: #06a0ff;
 }
 
-.yellow {
+span.yellow {
 	color: #ffff06;
 }
 
-.size-1:after {
+span.size-1:after {
 	content: "1";
 	font-weight: bold;
 }
 
-.size-2:after {
+span.size-2:after {
 	content: "2";
 	font-weight: bold;
 }
 
-.size-3:after {
+span.size-3:after {
 	content: "3";
 	font-weight: bold;
 }
 
 /* Stash box */
 
-#stash-wrapper {
+div#stash-wrapper {
 	position: fixed;
 	top: 50%;
-	right: 50px;
+	right: 0px;
 
 	background-color: #fff;
 	border: 1px solid transparent;
@@ -147,12 +172,15 @@ html, body {
 	border-radius: 6px;
 }
 
-#stash {
+table#stash {
 	text-align: right;
 	border-collapse: collapse;
+	box-shadow: inset 5px 5px 5px rgba(0,0,0,.1);
+	overflow: hidden;
 }
 
 #stash td {
+	width: 50px;
 	border: 1px solid #ddd;
 	padding: 5px;
 }
@@ -177,6 +205,29 @@ html, body {
 	padding-bottom: 7px;
 }
 
-#stash td:hover {
+#stash tr.selectable, #stash td.selectable {
 	background-color: rgba(0,0,0,.1);
+}
+
+#stash tr.selectable:hover > td, #stash td.selectable:hover {
+	background-color: #fff;
+}
+
+@media (min-width: 1800px) {
+	div#stash-wrapper {
+		right: 50px;
+	}
+}
+
+/* Additional graphics style */
+
+svg#surface {
+	width: inherit;
+	height: inherit;
+}
+
+svg#surface line.connection {
+	stroke: rgba(0,200,255,.5);
+	stroke-width: 2px;
+	stroke-dasharray: 25 5 20 5 15 5 10 5 15 5 20 5;
 }
