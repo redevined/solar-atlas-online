@@ -17,7 +17,6 @@ class ConnectionGraphics
 		surface = $("""<svg id="surface"></svg>""")
 
 		for [sys1, sys2] in @filter(@combinations(@game.systems))
-			console.log [sys1, sys2]
 			[[x1, y1], [x2, y2]] = @endpoints(sys1.pos, sys2.pos)
 			conn = $("""<line x1="#{x1}" y1="#{y1}" x2="#{x2}" y2="#{y2}" class="connection" />""")
 			surface.append(conn)

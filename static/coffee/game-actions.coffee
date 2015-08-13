@@ -57,7 +57,6 @@ class AttackActions extends Actions
 
 	# Set all ships in the same system attackable
 	setShipsCaptureable: (system) =>
-		console.log @
 		ships = system.ships[@players.inactive.id].filter (s) ->
 			s.size <= Math.max.apply(null, (sh.size for sh in system.ships[@players.active.id]))
 
@@ -79,14 +78,16 @@ class BuildActions extends Actions
 		colors = (ship.color for ship in system.ships[@players.active.id])
 
 		for color, row of stash.stack
-			if color in colors and row.filter( (r) -> r.length > 0 ).length > 0
-				do (color, row) =>
+			if color in colors
+				cell = row.filter( (r) -> r.length > 0 )[0]
+				if cell
+					do (color, cell) =>
 
-					stash.clickRow color, "build", () =>
-						@build(system, row)
-						stash.unclickRows("build")
+						stash.click color, cell[0].size, "build", () =>
+							@build(system, cell)
+							stash.unclick("build")
 
-	build: (system, piecerow) =>
+	build: (system, pieces) =>
 
 
 class TradeActions extends Actions
@@ -105,12 +106,13 @@ class TradeActions extends Actions
 	setStashTradable: (system, ship) =>
 		stash = @game.stash
 		for color, row of stash.stack
-			if row[ship.size - 1].length > 0
-				do (color, row) =>
+			cell = row[ship.size - 1]
+			if cell.length > 0
+				do (color, cell) =>
 
-					stash.clickRow color, "trade_stash", () =>
-						@trade(system, ship, row[ship.size - 1])
-						stash.unclickRows("trade_stash")
+					stash.click color, cell[0].size, "trade_stash", () =>
+						@trade(system, ship, cell)
+						stash.unclick("trade_stash")
 
 	trade: (system, ship, pieces) =>
 
@@ -130,6 +132,7 @@ class MoveActions extends Actions
 
 	# Set travel rule applied systems selectable for visiting
 	setSystemsVisitable: (system, ship) =>
+		stash = @game.stash
 		systems = @game.systems.filter (sys) ->
 			sys.stars.filter( (st) -> st.size in (st2.size for st2 in system.stars) ).length == 0
 
@@ -139,30 +142,29 @@ class MoveActions extends Actions
 				tsystem.click "move_system", () =>
 					@move(system, ship, tsystem)
 					system.unclick("move_system") for system in systems
-					@game.stash.unclickCells("discover_stash")
+					stash.unclick("discover_stash")
 
 	# Set stash cell for star creation
 	setStashDiscoverable: (system, ship) =>
 		[systems, stash] = [@game.systems, @game.stash]
 		for color, row of stash.stack
 			for size in [1..3]
-				if size not in (st.size for st in system.stars)
+				if size not in (st.size for st in system.stars) and row[size - 1].length > 0
 					do (color, row, size) =>
 
-						stash.clickCell color, size, "discover_stash", () =>
+						stash.click color, size, "discover_stash", () =>
 							@setNewSystemDiscoverable(system, ship, row[size - 1])
-							stash.unclickCells("discover_stash")
+							stash.unclick("discover_stash")
 							system.unclick("move_system") for system in systems
 
 	# Make game accept click for new system creation
 	setNewSystemDiscoverable: (system, ship, pieces) =>
-		[game, discover] = [@game, @discover]
-		game.click "discover_newsystem", (event) ->
-			if $(event.target).attr("id") == "game"
-				x = event.pageX - $(@).offset().left
-				y = event.pageY - $(@).offset().top
-				discover(system, ship, pieces, [x, y])
-				game.unclick("discover_newsystem")
+		@game.click "discover_newsystem", (event) =>
+			if $(event.target).attr("id") in ["game", "surface"]
+				x = event.pageX - @game.e.offset().left
+				y = event.pageY - @game.e.offset().top
+				@discover(system, ship, pieces, [x, y])
+				@game.unclick("discover_newsystem")
 
 	discover: (system, ship, pieces, pos) =>
 

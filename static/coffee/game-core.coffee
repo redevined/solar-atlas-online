@@ -22,13 +22,15 @@ class Element
 	render: (surface) ->
 		surface.append(@e)
 
-	click: (key, handler) ->
-		@e.on("click.#{key}", handler)
-		if not @e.hasClass("selectable") then @e.addClass("selectable") else @overload = true
+	click: (key, handler, e = @e) ->
+		e.on "click.#{key}", (event) ->
+			e.addClass("selected")
+			handler(event)
+		if not e.hasClass("selectable") then e.addClass("selectable") else @overload = true
 
-	unclick: (key) ->
-		@e.off("click.#{key}")
-		if not @overload then @e.removeClass("selectable") else @overload = false
+	unclick: (key, e = @e) ->
+		e.off("click.#{key}")
+		if not @overload then e.removeClass("selectable") else @overload = false
 
 	remove: () ->
 		@e.detach()
@@ -62,21 +64,11 @@ class Stash extends Element
 			@e.find("#stash").append(tr)
 		super(surface)
 
-	clickRow: (color, key, handler) ->
-		@e.find("tr.stash-#{color}").on("click.#{key}", handler)
-		@e.find("tr.stash-#{color}").addClass("selectable")
+	click: (color, size, args...) ->
+		super(args..., @e.find("tr.stash-#{color} > td.stash-#{size}"))
 
-	clickCell: (color, size, key, handler) ->
-		@e.find("tr.stash-#{color} > td.stash-#{size}").on("click.#{key}", handler)
-		@e.find("tr.stash-#{color} > td.stash-#{size}").addClass("selectable")
-
-	unclickRows: (key) ->
-		@e.find("tr").off("click.#{key}")
-		@e.find("tr").removeClass("selectable")
-
-	unclickCells: (key) ->
-		@e.find("td").off("click.#{key}")
-		@e.find("td").removeClass("selectable")
+	unclick: (args...) ->
+		super(args..., @e.find("td"))
 
 	add: (obj) ->
 		stashed = new Stashed(obj)
@@ -162,13 +154,11 @@ class System extends Element
 		ship.render(@e.find(".ships-left")) for ship in @ships[2]
 		super(surface)
 
-	click: (key, handler) ->
-		@e.find(".system").on("click.#{key}", handler)
-		@e.find(".system").addClass("selectable")
+	click: (args...) ->
+		super(args..., @e.find(".system"))
 
-	unclick: (key) ->
-		@e.find(".system").off("click.#{key}")
-		@e.find(".system").removeClass("selectable")
+	unclick: (args...) ->
+		super(args..., @e.find(".system"))
 
 	addShip: (player, ship) ->
 		@ships[player.id].push(ship)

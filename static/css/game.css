@@ -1,6 +1,7 @@
 /* Site layout */
 
-html, body {
+html,
+body {
 	width: 100%;
 	height: 100%;
 
@@ -98,11 +99,14 @@ div.system.selectable {
 	background-color: rgba(255,255,255,.1);
 }
 
-div.system.selectable:hover {
+div.system.selectable:hover,
+div.system.selected {
 	box-shadow: 0 0 10px #ddd;
 }
 
-div.stars, div.ships-right, div.ships-left {
+div.stars,
+div.ships-right,
+div.ships-left {
 	display: table-cell;
 	vertical-align: middle;
 }
@@ -124,7 +128,10 @@ div.ships-left {
 
 /* Game pieces */
 
-span.star.selectable, span.ship.selectable {
+span.star.selectable,
+span.ship.selectable,
+span.star.selected,
+span.ship.selected {
 	background-color: rgba(255,255,255,.1);
 }
 
@@ -205,11 +212,15 @@ table#stash {
 	padding-bottom: 7px;
 }
 
-#stash tr.selectable, #stash td.selectable {
+#stash tr.selectable,
+#stash td.selectable,
+#stash tr.selected,
+#stash td.selected {
 	background-color: rgba(0,0,0,.1);
 }
 
-#stash tr.selectable:hover > td, #stash td.selectable:hover {
+#stash tr.selectable:hover,
+#stash td.selectable:hover {
 	background-color: #fff;
 }
 
@@ -224,6 +235,7 @@ table#stash {
 svg#surface {
 	width: inherit;
 	height: inherit;
+	z-index: -100;
 }
 
 svg#surface line.connection {

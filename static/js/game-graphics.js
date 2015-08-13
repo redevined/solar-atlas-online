@@ -24,7 +24,6 @@ ConnectionGraphics = (function() {
     ref = this.filter(this.combinations(this.game.systems));
     for (k = 0, len1 = ref.length; k < len1; k++) {
       ref1 = ref[k], sys1 = ref1[0], sys2 = ref1[1];
-      console.log([sys1, sys2]);
       ref2 = this.endpoints(sys1.pos, sys2.pos), (ref3 = ref2[0], x1 = ref3[0], y1 = ref3[1]), (ref4 = ref2[1], x2 = ref4[0], y2 = ref4[1]);
       conn = $("<line x1=\"" + x1 + "\" y1=\"" + y1 + "\" x2=\"" + x2 + "\" y2=\"" + y2 + "\" class=\"connection\" />");
       surface.append(conn);
