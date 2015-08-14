@@ -1,7 +1,11 @@
 #!/usr/bin/env coffee
 
 
-class Actions
+# Star system radius
+sysradius = 50
+
+
+class BaseActions
 
 	# Bind game and players to instance
 	constructor: (@game) ->
@@ -11,7 +15,7 @@ class Actions
 		}
 
 
-class InitActions extends Actions
+class Actions extends BaseActions
 
 	# Configure actions
 	constructor: (game) ->
@@ -53,7 +57,7 @@ class InitActions extends Actions
 			when "yellow" then @actions.move.setShipsMoveable
 
 
-class AttackActions extends Actions
+class AttackActions extends BaseActions
 
 	# Set all ships in the same system attackable
 	setShipsCaptureable: (system) =>
@@ -70,7 +74,7 @@ class AttackActions extends Actions
 	attack: (system, ship) =>
 
 
-class BuildActions extends Actions
+class BuildActions extends BaseActions
 
 	# Set stash rows with matching colors in the current system selectable
 	setStashBuildable: (system) =>
@@ -90,7 +94,7 @@ class BuildActions extends Actions
 	build: (system, pieces) =>
 
 
-class TradeActions extends Actions
+class TradeActions extends BaseActions
 
 	# Make own ships tradable
 	setShipsTradable: (system) =>
@@ -117,7 +121,7 @@ class TradeActions extends Actions
 	trade: (system, ship, pieces) =>
 
 
-class MoveActions extends Actions
+class MoveActions extends BaseActions
 
 	# Enables selecting a ship to move
 	setShipsMoveable: (system) =>

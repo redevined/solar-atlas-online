@@ -243,3 +243,19 @@ svg#surface line.connection {
 	stroke-width: 2px;
 	stroke-dasharray: 25 5 20 5 15 5 10 5 15 5 20 5;
 }
+
+svg#surface circle.orbiter {
+	fill: #ddd;
+	animation: orbit linear infinite;
+	-webkit-animation: orbit linear infinite;
+}
+
+@keyframes orbit {
+	from { transform: rotate(0deg) }
+	to { transform: rotate(360deg) }
+}
+
+@-webkit-keyframes orbit {
+	from { -webkit-transform: rotate(0deg) }
+	to { -webkit-transform: rotate(360deg) }
+}

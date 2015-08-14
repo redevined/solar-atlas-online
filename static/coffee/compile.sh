@@ -1,1 +1,1 @@
-coffee -o ../js -cb
+coffee -o ../js -cwb . &

@@ -253,14 +253,16 @@
 					"}"
 				);
 
+				var settings = JSON.parse("{ \"connections\": true, \"orbits\": false }");
+
 				game = new Game(current);
 				game.render($( "#game-wrapper" ));
-				actions = new InitActions(game);
-				graphics = new InitGraphics(game);
+				actions = new Actions(game);
+				graphics = new Graphics(game, settings);
 
 				$( "button#return" ).click(function() {
 					location.href = "/";
-				})
+				});
 
 				$( "button#reset" ).click(function() {
 					location.reload(true);

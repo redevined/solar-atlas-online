@@ -1,6 +1,10 @@
 #!/usr/bin/env coffee
 
 
+# Star system radius
+sysradius = 50
+
+
 # Player object
 class Player
 
@@ -139,7 +143,7 @@ class System extends Element
 			2: (new Ship(s) for s in current.ships[2])
 		}
 		super("""
-			<div class="system-clear" style="top: #{@pos[1] - 100}px; left: #{@pos[0] - 100}px;">
+			<div class="system-clear" style="top: #{@pos[1] - sysradius*2}px; left: #{@pos[0] - sysradius*2}px;">
 				<div class="system #{'system-home' if @home}">
 					<div class="ships-left"></div>
 					<div class="stars"></div>
