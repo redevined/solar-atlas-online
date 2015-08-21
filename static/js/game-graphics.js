@@ -6,7 +6,6 @@ sysradius = 50;
 
 Graphics = (function() {
   function Graphics(game, settings) {
-    var surface;
     this.features = [];
     if (settings.connections) {
       this.features.push(new ConnectionGraphics(game));
@@ -14,20 +13,20 @@ Graphics = (function() {
     if (settings.orbits) {
       this.features.push(new OrbitGraphics(game));
     }
-    surface = $("<svg id=\"surface\"></svg>");
-    game.e.append(surface);
-    this.render(surface);
+    this.render(game.e);
   }
 
   Graphics.prototype.render = function(surface) {
-    var feature, k, len1, ref;
-    surface.empty();
+    var feature, k, len1, ref, svg;
+    $("svg#surface").remove();
+    svg = $("<svg id=\"surface\"></svg>");
     ref = this.features;
     for (k = 0, len1 = ref.length; k < len1; k++) {
       feature = ref[k];
-      feature.render(surface);
+      feature.render(svg);
     }
-    return surface.html(surface.html());
+    svg.html(svg.html());
+    return surface.append(svg);
   };
 
   return Graphics;

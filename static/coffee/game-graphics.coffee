@@ -12,15 +12,15 @@ class Graphics
 		@features.push(new ConnectionGraphics(game)) if settings.connections
 		@features.push(new OrbitGraphics(game)) if settings.orbits
 		
-		surface = $("""<svg id="surface"></svg>""")
-		game.e.append(surface)
-		@render(surface)
+		@render(game.e)
 
 	render: (surface) ->
-		surface.empty()
+		$("svg#surface").remove()
+		svg = $("""<svg id="surface"></svg>""")
 		for feature in @features
-			feature.render(surface)
-		surface.html(surface.html())
+			feature.render(svg)
+		svg.html(svg.html())
+		surface.append(svg)
 
 
 class ConnectionGraphics

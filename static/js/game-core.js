@@ -182,16 +182,16 @@ Stash = (function(superClass) {
     return stashed.render(this.e.find(".stash-" + stashed.color + " .stash-" + stashed.size));
   };
 
-  Stash.prototype.getShip = function(color, size) {
+  Stash.prototype.getShip = function(obj) {
     var stashed;
-    stashed = this.stack[color][size - 1].pop();
+    stashed = this.stack[obj.color][obj.size - 1].pop();
     stashed.remove();
     return new Ship(stashed);
   };
 
-  Stash.prototype.getStar = function(color, size) {
+  Stash.prototype.getStar = function(obj) {
     var stashed;
-    stashed = this.stack[color][size - 1].pop();
+    stashed = this.stack[obj.color][obj.size - 1].pop();
     stashed.remove();
     return new Star(stashed);
   };
@@ -337,19 +337,20 @@ System = (function(superClass) {
   System.prototype.getShip = function(player, ship) {
     var index;
     index = this.ships[player.id].indexOf(ship);
-    ship = this.ships[player.id].splice(index, 1);
-    if (!this.ships[1] && !this.ships[2]) {
+    ship = this.ships[player.id].splice(index, 1)[0];
+    if (this.ships[1].length + this.ships[2].length === 0) {
       this.destroy();
+    } else {
+      ship.remove();
     }
-    ship.remove();
     return ship;
   };
 
   System.prototype.removeStar = function(star) {
     var index;
     index = this.stars.indexOf(star);
-    this.stars.splice(index, 1).destroy();
-    if (!stars) {
+    this.stars.splice(index, 1)[0].destroy();
+    if (stars.length === 0) {
       return this.destroy();
     }
   };
@@ -430,6 +431,24 @@ Game = (function(superClass) {
     return this.players.filter(function(p) {
       return !p.isActive();
     }).pop();
+  };
+
+  Game.prototype.newSystem = function(star, pos) {
+    var system;
+    system = new System({
+      pos: pos,
+      stars: [star],
+      ships: {
+        1: [],
+        2: []
+      }
+    });
+    this.systems.push(system);
+    system.render(this.e);
+    if (graphics) {
+      graphics.render(this.e);
+    }
+    return system;
   };
 
   Game.prototype.toJson = function() {

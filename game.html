@@ -253,10 +253,16 @@
 					"}"
 				);
 
-				var settings = JSON.parse("{ \"connections\": true, \"orbits\": false }");
+				var settings = JSON.parse(
+					"{" +
+					"    \"connections\": true," +
+					"    \"orbits\": true" +
+					"}"
+				);
 
 				game = new Game(current);
 				game.render($( "#game-wrapper" ));
+
 				actions = new Actions(game);
 				graphics = new Graphics(game, settings);
 

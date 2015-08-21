@@ -148,7 +148,10 @@ AttackActions = (function(superClass) {
     return results;
   };
 
-  AttackActions.prototype.attack = function(system, ship) {};
+  AttackActions.prototype.attack = function(system, ship) {
+    ship = system.getShip(this.players.inactive, ship);
+    return system.addShip(this.players.active, ship);
+  };
 
   return AttackActions;
 
@@ -188,7 +191,7 @@ BuildActions = (function(superClass) {
           results.push((function(_this) {
             return function(color, cell) {
               return stash.click(color, cell[0].size, "build", function() {
-                _this.build(system, cell);
+                _this.build(system, cell[0]);
                 return stash.unclick("build");
               });
             };
@@ -203,7 +206,10 @@ BuildActions = (function(superClass) {
     return results;
   };
 
-  BuildActions.prototype.build = function(system, pieces) {};
+  BuildActions.prototype.build = function(system, ship) {
+    ship = this.game.stash.getShip(ship);
+    return system.addShip(this.players.active, ship);
+  };
 
   return BuildActions;
 
@@ -255,7 +261,7 @@ TradeActions = (function(superClass) {
         results.push((function(_this) {
           return function(color, cell) {
             return stash.click(color, cell[0].size, "trade_stash", function() {
-              _this.trade(system, ship, cell);
+              _this.trade(system, ship, cell[0]);
               return stash.unclick("trade_stash");
             });
           };
@@ -267,7 +273,11 @@ TradeActions = (function(superClass) {
     return results;
   };
 
-  TradeActions.prototype.trade = function(system, ship, pieces) {};
+  TradeActions.prototype.trade = function(system, ship, newship) {
+    system.getShip(this.players.active, ship).destroy();
+    ship = this.game.stash.getShip(newship);
+    return system.addShip(this.players.active, ship);
+  };
 
   return TradeActions;
 
@@ -374,7 +384,7 @@ MoveActions = (function(superClass) {
               return function(color, row, size) {
                 return stash.click(color, size, "discover_stash", function() {
                   var j, len, results2;
-                  _this.setNewSystemDiscoverable(system, ship, row[size - 1]);
+                  _this.setNewSystemDiscoverable(system, ship, row[size - 1][0]);
                   stash.unclick("discover_stash");
                   results2 = [];
                   for (j = 0, len = systems.length; j < len; j++) {
@@ -395,23 +405,32 @@ MoveActions = (function(superClass) {
     return results;
   };
 
-  MoveActions.prototype.setNewSystemDiscoverable = function(system, ship, pieces) {
+  MoveActions.prototype.setNewSystemDiscoverable = function(system, ship, star) {
     return this.game.click("discover_newsystem", (function(_this) {
       return function(event) {
         var ref, x, y;
         if ((ref = $(event.target).attr("id")) === "game" || ref === "surface") {
           x = event.pageX - _this.game.e.offset().left;
           y = event.pageY - _this.game.e.offset().top;
-          _this.discover(system, ship, pieces, [x, y]);
+          console.log([x, y]);
+          _this.discover(system, ship, star, [x, y]);
           return _this.game.unclick("discover_newsystem");
         }
       };
     })(this));
   };
 
-  MoveActions.prototype.discover = function(system, ship, pieces, pos) {};
+  MoveActions.prototype.discover = function(system, ship, star, pos) {
+    var nextsys;
+    star = this.game.stash.getStar(star);
+    nextsys = game.newSystem(star, pos);
+    return this.move(system, ship, nextsys);
+  };
 
-  MoveActions.prototype.move = function(system, ship, nextsys) {};
+  MoveActions.prototype.move = function(system, ship, nextsys) {
+    ship = system.getShip(this.players.active, ship);
+    return nextsys.addShip(this.players.active, ship);
+  };
 
   return MoveActions;
 

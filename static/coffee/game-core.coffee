@@ -79,13 +79,13 @@ class Stash extends Element
 		@stack[obj.color][obj.size - 1].push(stashed)
 		stashed.render(@e.find(".stash-#{stashed.color} .stash-#{stashed.size}"))
 
-	getShip: (color, size) ->
-		stashed = @stack[color][size - 1].pop()
+	getShip: (obj) ->
+		stashed = @stack[obj.color][obj.size - 1].pop()
 		stashed.remove()
 		new Ship(stashed)
 
-	getStar: (color, size) ->
-		stashed = @stack[color][size - 1].pop()
+	getStar: (obj) ->
+		stashed = @stack[obj.color][obj.size - 1].pop()
 		stashed.remove()
 		new Star(stashed)
 
@@ -170,16 +170,17 @@ class System extends Element
 
 	getShip: (player, ship) ->
 		index = @ships[player.id].indexOf(ship) # not working
-		ship = @ships[player.id].splice(index, 1)
-		if not @ships[1] and not @ships[2]
+		ship = @ships[player.id].splice(index, 1)[0]
+		if @ships[1].length + @ships[2].length == 0
 			@destroy()
-		ship.remove()
+		else
+			ship.remove()
 		ship
 
 	removeStar: (star) ->
 		index = @stars.indexOf(star) # not working
-		@stars.splice(index, 1).destroy()
-		if not stars
+		@stars.splice(index, 1)[0].destroy()
+		if stars.length == 0
 			@destroy()
 
 	destroy: () ->
@@ -215,6 +216,17 @@ class Game extends Element
 		@players.filter( (p) ->
 			not p.isActive()
 		).pop()
+
+	newSystem: (star, pos) ->
+		system = new System({
+			pos: pos,
+			stars: [star],
+			ships: { 1: [], 2: [] }
+		})
+		@systems.push(system)
+		system.render(@e)
+		graphics.render(@e) if graphics
+		system
 
 	toJson: () ->
 		JSON.stringify(@)

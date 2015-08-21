@@ -71,7 +71,10 @@ class AttackActions extends BaseActions
 					@attack(system, ship)
 					ship.unclick("attack") for ship in ships
 
+	# Execute attack action
 	attack: (system, ship) =>
+		ship = system.getShip(@players.inactive, ship)
+		system.addShip(@players.active, ship)
 
 
 class BuildActions extends BaseActions
@@ -88,10 +91,13 @@ class BuildActions extends BaseActions
 					do (color, cell) =>
 
 						stash.click color, cell[0].size, "build", () =>
-							@build(system, cell)
+							@build(system, cell[0])
 							stash.unclick("build")
 
-	build: (system, pieces) =>
+	# Execute build action
+	build: (system, ship) =>
+		ship = @game.stash.getShip(ship)
+		system.addShip(@players.active, ship)
 
 
 class TradeActions extends BaseActions
@@ -115,10 +121,14 @@ class TradeActions extends BaseActions
 				do (color, cell) =>
 
 					stash.click color, cell[0].size, "trade_stash", () =>
-						@trade(system, ship, cell)
+						@trade(system, ship, cell[0])
 						stash.unclick("trade_stash")
 
-	trade: (system, ship, pieces) =>
+	# Execute trade action
+	trade: (system, ship, newship) =>
+		system.getShip(@players.active, ship).destroy()
+		ship = @game.stash.getShip(newship)
+		system.addShip(@players.active, ship)
 
 
 class MoveActions extends BaseActions
@@ -157,19 +167,27 @@ class MoveActions extends BaseActions
 					do (color, row, size) =>
 
 						stash.click color, size, "discover_stash", () =>
-							@setNewSystemDiscoverable(system, ship, row[size - 1])
+							@setNewSystemDiscoverable(system, ship, row[size - 1][0])
 							stash.unclick("discover_stash")
 							system.unclick("move_system") for system in systems
 
 	# Make game accept click for new system creation
-	setNewSystemDiscoverable: (system, ship, pieces) =>
+	setNewSystemDiscoverable: (system, ship, star) =>
 		@game.click "discover_newsystem", (event) =>
 			if $(event.target).attr("id") in ["game", "surface"]
 				x = event.pageX - @game.e.offset().left
 				y = event.pageY - @game.e.offset().top
-				@discover(system, ship, pieces, [x, y])
+				console.log [x, y]
+				@discover(system, ship, star, [x, y])
 				@game.unclick("discover_newsystem")
 
-	discover: (system, ship, pieces, pos) =>
+	# Create new system and move aftewards
+	discover: (system, ship, star, pos) =>
+		star = @game.stash.getStar(star)
+		nextsys = game.newSystem(star, pos)
+		@move(system, ship, nextsys)
 
+	# Execute move action
 	move: (system, ship, nextsys) =>
+		ship = system.getShip(@players.active, ship)
+		nextsys.addShip(@players.active, ship)
