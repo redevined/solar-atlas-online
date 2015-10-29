@@ -13,6 +13,12 @@ class Player
 		@name = current.name
 		@actions = current.actions
 
+	act: () ->
+		@actions++
+
+	acted: () ->
+		@actions--
+
 	isActive: () ->
 		@actions != 0
 
@@ -103,6 +109,9 @@ class Stashable extends Element
 		@remove()
 		game.stash.add(@)
 
+	str: () ->
+		@color[0].toUpperCase() + @size
+
 
 # Stashed game piece
 class Stashed extends Stashable
@@ -189,6 +198,9 @@ class System extends Element
 		ship.destroy() for ship in @ships[1]
 		ship.destroy() for ship in @ships[2]
 
+	str: () ->
+		(star.str() for star in @stars).join("+")
+
 
 # Container for all game objects, constructor accepts current game status
 class Game extends Element
@@ -197,6 +209,7 @@ class Game extends Element
 		@players = (new Player(p) for p in current.players)
 		@systems = (new System(s) for s in current.systems)
 		@stash = new Stash(current.stash)
+		@messages = current.messages
 		super("""
 			<div id="game">
 			</div>
@@ -227,6 +240,28 @@ class Game extends Element
 		system.render(@e)
 		graphics.render(@e) if graphics
 		system
+
+	log: (msg) ->
+		@messages.push(msg)
+
+	done: () ->
+		@e.find(".selected").removeClass("selected")
+		player = @getActivePlayer()
+		player.acted()
+		if not @checkFinish()
+			if not player.isActive()
+				@getInactivePlayer.act()
+				@messages = []
+
+	checkFinish: () ->
+		winners = for players in [@players, @players.reverse()]
+			[player, other] = players
+			home = @systems.filter( (sys) -> sys.home == player.id ).pop()
+			other if home is undefined or home.ships[player.id].length == 0
+
+		@log("The game finished in a draw.") if winners.length == 2
+		@log("#{winners[0].name} won the game!") if winners.length == 1
+		winners.length > 0
 
 	toJson: () ->
 		JSON.stringify(@)

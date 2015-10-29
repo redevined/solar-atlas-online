@@ -35,7 +35,9 @@ Actions = (function(superClass) {
       trade: new TradeActions(game),
       move: new MoveActions(game)
     };
-    this.setSystemsSelectable();
+    if (this.players.active) {
+      this.setSystemsSelectable();
+    }
   }
 
   Actions.prototype.setSystemsSelectable = function() {
@@ -150,7 +152,9 @@ AttackActions = (function(superClass) {
 
   AttackActions.prototype.attack = function(system, ship) {
     ship = system.getShip(this.players.inactive, ship);
-    return system.addShip(this.players.active, ship);
+    system.addShip(this.players.active, ship);
+    this.game.done();
+    return this.game.log(this.players.active.name + " captured ship " + (ship.str()) + " in system " + (system.str()) + ".");
   };
 
   return AttackActions;
@@ -208,7 +212,9 @@ BuildActions = (function(superClass) {
 
   BuildActions.prototype.build = function(system, ship) {
     ship = this.game.stash.getShip(ship);
-    return system.addShip(this.players.active, ship);
+    system.addShip(this.players.active, ship);
+    this.game.done();
+    return this.game.log(this.players.active.name + " built ship " + (ship.str()) + " in system " + (system.str()) + ".");
   };
 
   return BuildActions;
@@ -276,7 +282,9 @@ TradeActions = (function(superClass) {
   TradeActions.prototype.trade = function(system, ship, newship) {
     system.getShip(this.players.active, ship).destroy();
     ship = this.game.stash.getShip(newship);
-    return system.addShip(this.players.active, ship);
+    system.addShip(this.players.active, ship);
+    this.game.done();
+    return this.game.log(this.players.active.name + " traded ship " + (ship.str()) + " for ship " + (newship.str()) + " in system " + (system.str()) + ".");
   };
 
   return TradeActions;
@@ -421,15 +429,17 @@ MoveActions = (function(superClass) {
   };
 
   MoveActions.prototype.discover = function(system, ship, star, pos) {
-    var nextsys;
+    var newsys;
     star = this.game.stash.getStar(star);
-    nextsys = game.newSystem(star, pos);
-    return this.move(system, ship, nextsys);
+    newsys = game.newSystem(star, pos);
+    return this.move(system, ship, newsys);
   };
 
-  MoveActions.prototype.move = function(system, ship, nextsys) {
+  MoveActions.prototype.move = function(system, ship, newsys) {
     ship = system.getShip(this.players.active, ship);
-    return nextsys.addShip(this.players.active, ship);
+    newsys.addShip(this.players.active, ship);
+    this.game.done();
+    return this.game.log(this.players.active.name + " moved ship " + (ship.str()) + " from system " + (system.str()) + " to system " + (newsys.str()) + ".");
   };
 
   return MoveActions;

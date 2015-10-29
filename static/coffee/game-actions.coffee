@@ -26,7 +26,7 @@ class Actions extends BaseActions
 			trade: new TradeActions(game),
 			move: new MoveActions(game)
 		}
-		@setSystemsSelectable()
+		@setSystemsSelectable() if @players.active
 
 	# Set all solar system selectable
 	setSystemsSelectable: () =>
@@ -75,6 +75,8 @@ class AttackActions extends BaseActions
 	attack: (system, ship) =>
 		ship = system.getShip(@players.inactive, ship)
 		system.addShip(@players.active, ship)
+		@game.done()
+		@game.log("#{@players.active.name} captured ship #{ship.str()} in system #{system.str()}.")
 
 
 class BuildActions extends BaseActions
@@ -98,6 +100,8 @@ class BuildActions extends BaseActions
 	build: (system, ship) =>
 		ship = @game.stash.getShip(ship)
 		system.addShip(@players.active, ship)
+		@game.done()
+		@game.log("#{@players.active.name} built ship #{ship.str()} in system #{system.str()}.")
 
 
 class TradeActions extends BaseActions
@@ -129,6 +133,8 @@ class TradeActions extends BaseActions
 		system.getShip(@players.active, ship).destroy()
 		ship = @game.stash.getShip(newship)
 		system.addShip(@players.active, ship)
+		@game.done()
+		@game.log("#{@players.active.name} traded ship #{ship.str()} for ship #{newship.str()} in system #{system.str()}.")
 
 
 class MoveActions extends BaseActions
@@ -184,10 +190,12 @@ class MoveActions extends BaseActions
 	# Create new system and move aftewards
 	discover: (system, ship, star, pos) =>
 		star = @game.stash.getStar(star)
-		nextsys = game.newSystem(star, pos)
-		@move(system, ship, nextsys)
+		newsys = game.newSystem(star, pos)
+		@move(system, ship, newsys)
 
 	# Execute move action
-	move: (system, ship, nextsys) =>
+	move: (system, ship, newsys) =>
 		ship = system.getShip(@players.active, ship)
-		nextsys.addShip(@players.active, ship)
+		newsys.addShip(@players.active, ship)
+		@game.done()
+		@game.log("#{@players.active.name} moved ship #{ship.str()} from system #{system.str()} to system #{newsys.str()}.")

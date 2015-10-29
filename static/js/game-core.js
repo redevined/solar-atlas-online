@@ -13,6 +13,14 @@ Player = (function() {
     this.actions = current.actions;
   }
 
+  Player.prototype.act = function() {
+    return this.actions++;
+  };
+
+  Player.prototype.acted = function() {
+    return this.actions--;
+  };
+
   Player.prototype.isActive = function() {
     return this.actions !== 0;
   };
@@ -212,6 +220,10 @@ Stashable = (function(superClass) {
     return game.stash.add(this);
   };
 
+  Stashable.prototype.str = function() {
+    return this.color[0].toUpperCase() + this.size;
+  };
+
   return Stashable;
 
 })(Element);
@@ -377,6 +389,20 @@ System = (function(superClass) {
     return results;
   };
 
+  System.prototype.str = function() {
+    var star;
+    return ((function() {
+      var j, len, ref, results;
+      ref = this.stars;
+      results = [];
+      for (j = 0, len = ref.length; j < len; j++) {
+        star = ref[j];
+        results.push(star.str());
+      }
+      return results;
+    }).call(this)).join("+");
+  };
+
   return System;
 
 })(Element);
@@ -407,6 +433,7 @@ Game = (function(superClass) {
       return results;
     })();
     this.stash = new Stash(current.stash);
+    this.messages = current.messages;
     Game.__super__.constructor.call(this, "<div id=\"game\">\n</div>");
   }
 
@@ -449,6 +476,52 @@ Game = (function(superClass) {
       graphics.render(this.e);
     }
     return system;
+  };
+
+  Game.prototype.log = function(msg) {
+    return this.messages.push(msg);
+  };
+
+  Game.prototype.done = function() {
+    var player;
+    this.e.find(".selected").removeClass("selected");
+    player = this.getActivePlayer();
+    player.acted();
+    if (!this.checkFinish()) {
+      if (!player.isActive()) {
+        this.getInactivePlayer.act();
+        return this.messages = [];
+      }
+    }
+  };
+
+  Game.prototype.checkFinish = function() {
+    var home, other, player, players, winners;
+    winners = (function() {
+      var j, len, ref, results;
+      ref = [this.players, this.players.reverse()];
+      results = [];
+      for (j = 0, len = ref.length; j < len; j++) {
+        players = ref[j];
+        player = players[0], other = players[1];
+        home = this.systems.filter(function(sys) {
+          return sys.home === player.id;
+        }).pop();
+        if (home === void 0 || home.ships[player.id].length === 0) {
+          results.push(other);
+        } else {
+          results.push(void 0);
+        }
+      }
+      return results;
+    }).call(this);
+    if (winners.length === 2) {
+      this.log("The game finished in a draw.");
+    }
+    if (winners.length === 1) {
+      this.log(winners[0].name + " won the game!");
+    }
+    return winners.length > 0;
   };
 
   Game.prototype.toJson = function() {
